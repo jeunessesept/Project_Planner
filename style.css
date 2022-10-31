@@ -43,10 +43,14 @@ body{
     margin-top: 50px;
 }
 
-table,
+table, 
+th,
 td {
     border: 1px solid #333;
     width: 60vw;
+    height: 50px;
+    border-collapse: collapse;
+    
 }
 
 
