@@ -102,8 +102,7 @@ const tableTasks = () => {
 
 
 
-const sortTable = () => {
-  let table, rows, switching, i, x, y, shouldSwitch;
+const sortTable = (table, rows, switching, i, x, y, shouldSwitch) => {
   table = document.querySelector(".tasks");
   switching = true;
   while (switching) {
