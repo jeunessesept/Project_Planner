@@ -16,8 +16,16 @@
         <div class="text">enter a new task</div>
         <input type="text" class="name" placeholder="task name">
         <input type="text" class="description" placeholder="description of the task">
-        <input type="text" class="duedate" placeholder="due, Month Day Year">
+        <input type="date" id="duedate"  value="">
         <button class="submit"> submit</button>
+    </div>
+    <div class="sorteby">
+        <select name="sorte" id="sorte">
+            <option value="select">sort tasks by</option>
+            <option value="name">name</option>
+            <option value="urgent">urgent</option>
+            <option value="remain">remaining time</option>
+        </select>
     </div>
 
     <div class="tableTasks">

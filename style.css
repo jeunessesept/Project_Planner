@@ -36,6 +36,17 @@ body{
     font-weight: 900;
 }
 
+.sorteby{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    
+}
+
+#sorte{
+    margin-right: 100px;
+}
+
 .tableTasks{
     display: flex;
     justify-content: center;
@@ -46,14 +57,14 @@ body{
 table, 
 th,
 td {
-    border: 1px solid #333;
+    border: 2px solid rgb(235, 157, 157);
     width: 60vw;
     height: 50px;
-    border-collapse: collapse;
+    border-collapse: collapse ;
+    font-weight: 400;
     
 }
 
-
-#statustask{
-    display: none;
+td {
+    font-weight: 300;
 }

@@ -1,5 +1,21 @@
 ////Heure et date, dans .firstContainer
 
+const weekday = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+const months = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+];
+
 const displayHours = () => {
   const dateHours = document.querySelector(".dateHours");
   const dateAndHours = new Date();
@@ -9,22 +25,6 @@ const displayHours = () => {
   let hoursDay = dateAndHours.getHours();
   let minutesDay = dateAndHours.getMinutes();
   let secondesDay = dateAndHours.getSeconds();
-
-  const weekday = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const months = [
-    "JAN",
-    "FEB",
-    "MAR",
-    "APR",
-    "MAY",
-    "JUN",
-    "JUL",
-    "AUG",
-    "SEP",
-    "OCT",
-    "NOV",
-    "DEC",
-  ];
 
   hoursDay = hoursDay < 10 ? "0" + hoursDay : hoursDay;
   minutesDay = minutesDay < 10 ? "0" + minutesDay : minutesDay;
@@ -46,114 +46,32 @@ const displayHours = () => {
     secondesDay;
   dateHours.innerHTML = dateHoursOfToday;
 };
-setInterval(displayHours, 1000);
-
-/// table
-
-//const tableTasks = () => {
-//   const table = document.querySelector(".tasks");
-//   const inputName = document.querySelector(".name");
-//   const inputDescription = document.querySelector(".description");
-//   const inputDate = document.querySelector(".duedate");
-//   const newTask = document.createElement("tr");
-//   const inName = document.createElement("td");
-//   const inDescription = document.createElement("td");
-//   const inDueDate = document.createElement("td");
-//   const statu = document.createElement("td");
-//   const selectStatu = document.createElement("select");
-//   const subButton = document.querySelector(".submit");
-//   const tableBody = document.querySelector(".tbody");
-
-//   console.log(newTask.firstChild)
-
-//   inName.textContent = inputName.value;
-
-//   const selectOptions = ["select", "todo", "doing", "done"];
-
-//   subButton.addEventListener("click", () => {
-//     const newTask = document.createElement("tr");
-//     newTask.classList.add("newtask");
-//     inName.innerHTML = inputName.value;
-//     inDescription.innerHTML = inputDescription.value;
-//     inDueDate.innerHTML = inputDate.value;
-//     tableBody.appendChild(newTask);
-//     newTask.insertAdjacentHTML("beforeBegin", `<td> ${inName.outerHTML} </td>`);
-//     newTask.insertAdjacentHTML("afterBegin", `<td> ${inDescription.outerHTML} </td>`);
-//     newTask.appendChild(inDueDate);
-//     newTask.appendChild(statu);
-//     statu.appendChild(selectStatu);
-//     console.log(newTask.firstChild)
-//   });
-//   for (i = 0; i < selectOptions.length; i++) {
-//     option = document.createElement("option");
-//     option.value = selectOptions[i];
-//     option.text = selectOptions[i];
-//     selectStatu.appendChild(option);
-//   }
-// };
-
-//newTask.appendChild(inName);
-//newTask.appendChild(inDescription);
-///newTask.appendChild(inDueDate);
-
-// const list1 = [];
-// const list2 = [];
-// const list3 = [];
-
-// let n = 1;
-// let x = 0;
-
-
-const dateAndHours = new Date();
-
 
 
 
 const tableTasks = () => {
-  const dateAndHours = new Date();
-  const list1 = [];
-  const list2 = [];
-  const list3 = [];
-  const list4 = [];
-
-  console.log(dateAndHours)
-  
   let n = 1;
-  let x = 0;
 
   const addRow = document.querySelector(".tasks");
   const newRow = addRow.insertRow(n);
 
   const inputName = document.querySelector(".name");
   const inputDescription = document.querySelector(".description");
-  const dueDate = document.querySelector(".duedate").value;
+  const dateInput = document.getElementById("duedate");
 
-  localStorage.setItem("name", inputName.value)
-  localStorage.setItem("description", inputDescription.value)
+  const dateAndHours = new Date();
 
-  const months = [
-    "JAN",
-    "FEB",
-    "MAR",
-    "APR",
-    "MAY",
-    "JUN",
-    "JUL",
-    "AUG",
-    "SEP",
-    "OCT",
-    "NOV",
-    "DEC",
-  ];
+  let difference = dateInput.valueAsNumber - dateAndHours.getTime();
+  let remainDays = Math.ceil(difference / (1000 * 3600 * 24));
 
-
-
-  list1[x] = document.querySelector(".name").value;
-  list2[x] = document.querySelector(".description").value;
-  list3[x] = dateAndHours.getDate() + months[dateAndHours.getMonth()] + dateAndHours.getFullYear();
- 
-
-  
+  localStorage.setItem("name", inputName.value);
+  localStorage.setItem("description", inputDescription.value);
+  localStorage.setItem(
+    "created",
+    dateAndHours.getDate() +
+      months[dateAndHours.getMonth()] +
+      dateAndHours.getFullYear()
+  );
 
   const cel1 = newRow.insertCell(0);
   const cel2 = newRow.insertCell(1);
@@ -161,12 +79,13 @@ const tableTasks = () => {
   const cel4 = newRow.insertCell(3);
   const cel5 = newRow.insertCell(4);
 
-  cel1.innerHTML = list1[x];
-  cel2.innerHTML = list2[x];
-  cel3.innerHTML = list3[x];
+  cel1.innerHTML = localStorage.getItem("name");
+  cel2.innerHTML = localStorage.getItem("description");
+  cel3.innerHTML = localStorage.getItem("created");
+  cel4.innerHTML = dateInput.value + " / " + remainDays + " days";
+  
 
   n++;
-  x++;
 
   const selectStatu = document.createElement("select");
   const selectOptions = ["select", "todo", "doing", "done"];
@@ -181,6 +100,34 @@ const tableTasks = () => {
   }
 };
 
+
+
+const sortTable = () => {
+  let table, rows, switching, i, x, y, shouldSwitch;
+  table = document.querySelector(".tasks");
+  switching = true;
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[0];
+      y = rows[i + 1].getElementsByTagName("TD")[0];
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+
+
+setInterval(displayHours, 1000);
+
 const subButton = document.querySelector(".submit");
 
 subButton.addEventListener("click", () => {
@@ -189,3 +136,11 @@ subButton.addEventListener("click", () => {
 
 
 
+
+const sorteSelect = document.getElementById("sorte");
+
+sorteSelect.addEventListener("change", () => {
+  if (sorteSelect.value === "name"){
+    sortTable();
+  }
+})
