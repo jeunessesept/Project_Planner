@@ -14,32 +14,48 @@
     <div class="firstContainer">
         <div class="dateHours"></div>
         <div class="text">enter a new task</div>
-        <input type="text" class="name" placeholder="task name">
-        <input type="text" class="description" placeholder="description of the task">
-        <input type="date" id="duedate"  value="">
-        <button class="submit"> submit</button>
+        <form class="tasksform">
+            <input type="text" placeholder="task name" name="name" required>
+            <input type="text" placeholder="description of the task" name="description" required>
+            <input type="date" id="duedate" required>
+            <select name="status" id="selectstatus"  required>
+                <option value="blank">  </option>
+                <option value="todo"> to do</option>
+                <option value="doing"> doing</option>
+                <option value="done"> done </option>
+            </select>
+            <button class="submit"> submit</button>
+        </form>
+
     </div>
     <div class="sorteby">
         <select name="sorte" id="sorte">
             <option value="select">sort tasks by</option>
             <option value="name">name</option>
             <option value="urgent">urgent</option>
-            <option value="remain">remaining time</option>
+        </select>
+    </div>
+    <div class="filter">
+        <select id="filterstatus">
+            <option value="c">filter by</option>
+            <option value="d">to do</option>
+            <option value="e">doing</option>
+            <option value="f">done</option>
         </select>
     </div>
 
     <div class="tableTasks">
         <table class="tasks">
-          
-                <tr>
-                    <th>name of the task</th>
-                    <th>description</th>
-                    <th>created date</th>
-                    <th>due date</th>
-                    <th> status of the task</th>
 
-                </tr>
-                
+            <tr>
+                <th>name of the task</th>
+                <th>description</th>
+                <th>created date</th>
+                <th>due date</th>
+                <th> status of the task</th>
+
+            </tr>
+
         </table>
 
     </div>

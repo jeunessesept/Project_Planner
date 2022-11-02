@@ -36,16 +36,23 @@ body{
     font-weight: 900;
 }
 
-.sorteby{
+.sorteby,
+.filter{
     width: 100%;
     display: flex;
     justify-content: flex-end;
     
 }
 
-#sorte{
+#sorte,
+#filterstatus{
     margin-right: 100px;
+    margin-bottom: 10px;
 }
+
+
+
+
 
 .tableTasks{
     display: flex;

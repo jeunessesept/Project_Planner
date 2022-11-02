@@ -47,8 +47,84 @@ const displayHours = () => {
   dateHours.innerHTML = dateHoursOfToday;
 };
 
+const tasksform = document.querySelector(".tasksform");
+const table = document.querySelector(".tasks");
+const nameInput = tasksform["name"];
+const descriptionInput = tasksform["description"];
+const dateInput = document.getElementById("duedate");
+const statusSelector = tasksform["status"];
 
+console.log(statusSelector.value);
 
+const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+const addTask = (name, description, duedate, statu) => {
+  tasks.push({
+    name,
+    description,
+    duedate,
+    statu,
+  });
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  return { name, description, duedate, statu };
+};
+
+const newTaskRow = ({ name, description, duedate, statu }) => {
+  const newRow = document.createElement("tr");
+  const taskName = document.createElement("td");
+  const taskDescription = document.createElement("td");
+  const taskCreatedDate = document.createElement("td");
+  const taskDuedate = document.createElement("td");
+  const taskStatus = document.createElement("td");
+  const statuValue = document.getElementById("selecstatus");
+
+  const dateAndHours = new Date();
+
+  let difference = dateInput.valueAsNumber - dateAndHours.getTime();
+  let remainDays = Math.ceil(difference / (1000 * 3600 * 24));
+
+  taskName.innerHTML = name;
+  taskDescription.innerHTML = description;
+  taskCreatedDate.innerHTML =
+    dateAndHours.getDate() +
+    months[dateAndHours.getMonth()] +
+    dateAndHours.getFullYear();
+  taskDuedate.innerHTML = "in " + duedate + " days";
+  (taskStatus.innerHTML = statu),
+    newRow.append(
+      taskName,
+      taskDescription,
+      taskCreatedDate,
+      taskDuedate,
+      taskStatus
+    );
+  table.appendChild(newRow);
+};
+
+tasks.forEach(newTaskRow);
+
+tasksform.onsubmit = (e) => {
+  e.preventDefault();
+
+  const newTask = addTask(
+    nameInput.value,
+    descriptionInput.value,
+    Math.ceil(
+      (new Date(dateInput.value).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+    ),
+    statusSelector.value
+  );
+
+  newTaskRow(newTask);
+
+  nameInput.value = "";
+  descriptionInput.value = "";
+  dateInput.value = "";
+  statusSelector.value = "";
+};
+
+//// other way to create table's rows, mais moins lisible
 const tableTasks = () => {
   let n = 1;
 
@@ -72,6 +148,7 @@ const tableTasks = () => {
       months[dateAndHours.getMonth()] +
       dateAndHours.getFullYear()
   );
+  localStorage.setItem("remaindays", remainDays);
 
   const cel1 = newRow.insertCell(0);
   const cel2 = newRow.insertCell(1);
@@ -83,7 +160,6 @@ const tableTasks = () => {
   cel2.innerHTML = localStorage.getItem("description");
   cel3.innerHTML = localStorage.getItem("created");
   cel4.innerHTML = dateInput.value + " / " + remainDays + " days";
-  
 
   n++;
 
@@ -100,15 +176,15 @@ const tableTasks = () => {
   }
 };
 
+//// sorte the table by name
 
-
-const sortTable = (table, rows, switching, i, x, y, shouldSwitch) => {
+const sortTableName = (table, rows, switching, i, x, y, shouldSwitch) => {
   table = document.querySelector(".tasks");
   switching = true;
   while (switching) {
     switching = false;
     rows = table.rows;
-    for (i = 1; i < (rows.length - 1); i++) {
+    for (i = 1; i < rows.length - 1; i++) {
       shouldSwitch = false;
       x = rows[i].getElementsByTagName("TD")[0];
       y = rows[i + 1].getElementsByTagName("TD")[0];
@@ -122,24 +198,19 @@ const sortTable = (table, rows, switching, i, x, y, shouldSwitch) => {
       switching = true;
     }
   }
-}
+};
 
+////filter by status
+const filterStatus = document.getElementById("filterstatus");
+
+///calling things
 
 setInterval(displayHours, 1000);
-
-const subButton = document.querySelector(".submit");
-
-subButton.addEventListener("click", () => {
-  tableTasks();
-});
-
-
-
 
 const sorteSelect = document.getElementById("sorte");
 
 sorteSelect.addEventListener("change", () => {
-  if (sorteSelect.value === "name"){
-    sortTable();
+  if (sorteSelect.value === "name") {
+    sortTableName();
   }
-})
+});
