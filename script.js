@@ -57,6 +57,8 @@ const dateInput = document.getElementById("duedate");
 
 const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
+console.log(tasks)
+
 const addTask = (name, description, duedate) => {
   tasks.push({
     name,
