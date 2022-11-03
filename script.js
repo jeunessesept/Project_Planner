@@ -1,4 +1,5 @@
 ////Heure et date, dans .firstContainer
+let baseTask = 0;
 
 const weekday = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const months = [
@@ -52,37 +53,47 @@ const table = document.querySelector(".tasks");
 const nameInput = tasksform["name"];
 const descriptionInput = tasksform["description"];
 const dateInput = document.getElementById("duedate");
-const statusSelector = tasksform["status"];
-
-console.log(statusSelector.value);
+// const statusSelector = tasksform["status"];
 
 const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-const addTask = (name, description, duedate, statu) => {
+const addTask = (name, description, duedate) => {
   tasks.push({
     name,
     description,
     duedate,
-    statu,
   });
   localStorage.setItem("tasks", JSON.stringify(tasks));
 
-  return { name, description, duedate, statu };
+  return { name, description, duedate };
 };
 
-const newTaskRow = ({ name, description, duedate, statu }) => {
+const newTaskRow = ({ name, description, duedate, status }) => {
   const newRow = document.createElement("tr");
   const taskName = document.createElement("td");
   const taskDescription = document.createElement("td");
   const taskCreatedDate = document.createElement("td");
   const taskDuedate = document.createElement("td");
   const taskStatus = document.createElement("td");
-  const statuValue = document.getElementById("selecstatus");
 
+  const selectStatu = document.createElement("select");
+  selectStatu.dataset.taskId = baseTask;
+  const selectOptions = ["todo", "doing", "done"];
+
+  selectStatu.addEventListener("change", (event) => {
+    tasksAA = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasksAA[event.target.dataset.taskId].status = selectStatu.value;
+    localStorage.setItem("tasks", JSON.stringify(tasksAA));
+  });
+
+  for (i = 0; i < selectOptions.length; i++) {
+    option = document.createElement("option");
+    option.value = selectOptions[i];
+    option.text = selectOptions[i];
+    selectStatu.appendChild(option);
+  }
+  selectStatu.value = status;
   const dateAndHours = new Date();
-
-  let difference = dateInput.valueAsNumber - dateAndHours.getTime();
-  let remainDays = Math.ceil(difference / (1000 * 3600 * 24));
 
   taskName.innerHTML = name;
   taskDescription.innerHTML = description;
@@ -91,16 +102,21 @@ const newTaskRow = ({ name, description, duedate, statu }) => {
     months[dateAndHours.getMonth()] +
     dateAndHours.getFullYear();
   taskDuedate.innerHTML = "in " + duedate + " days";
-  (taskStatus.innerHTML = statu),
-    newRow.append(
-      taskName,
-      taskDescription,
-      taskCreatedDate,
-      taskDuedate,
-      taskStatus
-    );
+
+  taskStatus.append(selectStatu);
+  newRow.append(
+    taskName,
+    taskDescription,
+    taskCreatedDate,
+    taskDuedate,
+    taskStatus
+  );
   table.appendChild(newRow);
+
+  baseTask++;
 };
+
+//// calling newTaskRow
 
 tasks.forEach(newTaskRow);
 
@@ -112,16 +128,16 @@ tasksform.onsubmit = (e) => {
     descriptionInput.value,
     Math.ceil(
       (new Date(dateInput.value).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-    ),
-    statusSelector.value
+    )
   );
+  const selectOptions = ["todo", "doing", "done"];
 
   newTaskRow(newTask);
 
   nameInput.value = "";
   descriptionInput.value = "";
   dateInput.value = "";
-  statusSelector.value = "";
+  selectOptions.value = "";
 };
 
 //// other way to create table's rows, mais moins lisible
@@ -186,8 +202,8 @@ const sortTableName = (table, rows, switching, i, x, y, shouldSwitch) => {
     rows = table.rows;
     for (i = 1; i < rows.length - 1; i++) {
       shouldSwitch = false;
-      x = rows[i].getElementsByTagName("TD")[0];
-      y = rows[i + 1].getElementsByTagName("TD")[0];
+      x = rows[i].getElementsByTagName("td")[0];
+      y = rows[i + 1].getElementsByTagName("td")[0];
       if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
         shouldSwitch = true;
         break;
